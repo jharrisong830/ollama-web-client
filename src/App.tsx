@@ -1,49 +1,38 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 
 import { TextField } from "@mui/material";
+import callOllama from "./hooks/callOllama";
 
 function App() {
-    const [count, setCount] = useState(0);
-    const [prompt, setPrompt] = useState("");
+    const modelURL = "http://localhost:11434";
+    const modelType = "llama3.2:1b";
+
+    const {
+        response,
+        prompt,
+        setPrompt,
+        isAwaitingPrompt,
+        setIsAwaitingPrompt
+    } = callOllama(modelURL, modelType);
 
     return (
         <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            <h1>Ollama</h1>
             <div className="card">
                 <button
-                    onClick={() =>
-                        prompt.trim().length !== 0 && alert(prompt.trim())
+                    disabled={!isAwaitingPrompt}
+                    onClick={
+                        () =>
+                            prompt.trim().length !== 0 &&
+                            setIsAwaitingPrompt(false) // should trigger the effect to call the ollama api!
                     }
                 >
                     Ask
                 </button>
+            </div>
+            <div className="card">
                 <TextField
+                    disabled={!isAwaitingPrompt}
                     multiline
                     variant="filled"
                     label="Prompt"
@@ -51,6 +40,10 @@ function App() {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                 />
+            </div>
+
+            <div className="card">
+                <p>{response}</p>
             </div>
         </>
     );
