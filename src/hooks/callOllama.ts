@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { consumeResponse, submitPrompt } from "../lib/ollamaResponse";
+import { consumeResponse, submitGeneratePrompt } from "../lib/ollamaResponse";
 
 export type OllamaHookValues = {
     response: string;
@@ -16,7 +16,7 @@ const callOllama = (modelURL: string, modelType: string): OllamaHookValues => {
 
     useEffect(() => {
         const asyncWrapper = async () => {
-            const stream = await submitPrompt(prompt, modelURL, modelType);
+            const stream = await submitGeneratePrompt(prompt, modelURL, modelType);
             if (stream) {
                 let responseBuf = "";
                 let currChunk = await consumeResponse(stream);
