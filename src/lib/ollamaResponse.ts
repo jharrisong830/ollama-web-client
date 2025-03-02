@@ -1,11 +1,10 @@
-export type ChatMessage = {
-    role: "user" | "assistant";
-    content: string;
-};
+import { ChatMessage } from "./types";
 
 /**
  * given a prompt, submits a POST request to the Ollama server for a single text generation, and returns a readable stream of the response
  * @param prompt
+ * @param modelURL
+ * @param modelType
  * @returns
  */
 export const submitGeneratePrompt = async (
@@ -32,6 +31,9 @@ export const submitGeneratePrompt = async (
 /**
  * given a prompt, submits a POST request to the Ollama server for a chat, and returns a readable stream of the response
  * @param prompt
+ * @param messageHistory
+ * @param modelURL
+ * @param modelType
  * @returns
  */
 export const submitChatPrompt = async (
