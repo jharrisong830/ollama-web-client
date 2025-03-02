@@ -26,18 +26,12 @@ const callOllama = (modelURL: string, modelType: string, mode: Mode): OllamaHook
         };
 
         const asyncWrapperChat = async () => {
-            const stream = await submitChatPrompt(prompt, messageHistory, modelURL, modelType);
-            if (stream) {
-                let responseBuf = "";
-                let currChunk = await consumeResponse(stream);
-                while (currChunk !== null) {
-                    // currChunk is null when the stream is done
-                    responseBuf += JSON.parse(currChunk).response;
-                    currChunk = await consumeResponse(stream);
-                }
-                setMessageHistory([...messageHistory, { role: "user", content: prompt }, { role: "assistant", content: responseBuf }]); // update chat once response is done
+            const responseBody = await submitChatPrompt([...messageHistory, { role: "user", content: prompt }], modelURL, modelType);
+            if (responseBody) {
+                setMessageHistory([...messageHistory, { role: "user", content: prompt }, { role: "assistant", content: responseBody.message.content }]); // update chat once response is done
                 setPrompt(""); // reset on success
             }
+            setIsAwaitingPrompt(true);
         };
 
         if (!isAwaitingPrompt) {

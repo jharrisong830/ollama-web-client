@@ -37,15 +37,14 @@ export const submitGeneratePrompt = async (
  * @returns
  */
 export const submitChatPrompt = async (
-    prompt: string,
     messageHistory: Array<ChatMessage>,
     modelURL: string,
     modelType: string
-): Promise<ReadableStreamDefaultReader | undefined> => {
+): Promise<any> => {
     const requestBody = {
         model: modelType,
-        prompt: prompt,
-        messages: messageHistory
+        messages: messageHistory,
+        stream: false
     };
 
     const response = await fetch(`${modelURL}/api/chat`, {
@@ -56,7 +55,7 @@ export const submitChatPrompt = async (
         body: JSON.stringify(requestBody)
     });
 
-    return response.body?.getReader();
+    return await response.json();
 };
 
 export const consumeResponse = async (

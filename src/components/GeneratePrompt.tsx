@@ -8,7 +8,7 @@ export default function GeneratePrompt({ modelURL, modelType }: { modelURL: stri
         setPrompt,
         isAwaitingPrompt,
         setIsAwaitingPrompt
-    } = callOllama(modelURL, modelType);
+    } = callOllama(modelURL, modelType, "generate");
 
     return (
         <div>
